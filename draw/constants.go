@@ -2,7 +2,8 @@ package draw
 
 import "image/color"
 
-const IMG_SIZE = 300
+const IMG_SIZE = 600
+const ICON_RADIUS = IMG_SIZE / 10
 
 const MAX_ICON_NUM = 6
 

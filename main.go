@@ -9,7 +9,19 @@ import (
 
 func main() {
 
-	t := draw.NewThumbnail()
+	urls := []string{
+		"./pictures/0.png",
+		"./pictures/1.png",
+		"./pictures/2.png",
+		"./pictures/3.png",
+		"./pictures/4.png",
+		"./pictures/5.png",
+		"./pictures/6.png",
+		"./pictures/7.png",
+		"./pictures/8.png",
+		"./pictures/9.png",
+	}
+	t := draw.NewThumbnail(urls)
 	// RectからRGBAを作る(ゼロ値なので黒なはず)
 
 	// 出力用ファイル作成(エラー処理は略)
