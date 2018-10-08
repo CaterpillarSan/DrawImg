@@ -30,5 +30,6 @@ func NewThumbnail(urls []string) *Thumbnail {
 	if err = t.PutIcons(); err != nil {
 		fmt.Println(err)
 	}
+	t.SetTitle()
 	return t
 }
