@@ -2,35 +2,34 @@ package draw
 
 import (
 	"errors"
-	"fmt"
 	"image"
 	"image/color"
-	"math"
+	"image/draw"
+	_ "image/jpeg"
+	_ "image/png"
 	"math/rand"
 	"time"
 )
 
 type Icon struct {
 	frame_color color.Color
-	image_url   string
-	C           Circle
-}
-
-type Circle struct {
-	r int
-	p image.Point
+	ImageUrl    string
+	rect        image.Rectangle
+	pic         *Picture
 }
 
 var x_width = IMG_SIZE / (MAX_ICON_NUM/2 + 1)
-var y_width = IMG_SIZE / 6
+var y_width = IMG_SIZE / 6 //これは決め打ち, 間の帯のサイズ次第
+var r = ICON_RADIUS
 
-var icon_points = [6]image.Point{
-	image.Point{x_width * 1, y_width},
-	image.Point{x_width * 2, y_width},
-	image.Point{x_width * 3, y_width},
-	image.Point{x_width * 1, IMG_SIZE - y_width},
-	image.Point{x_width * 2, IMG_SIZE - y_width},
-	image.Point{x_width * 3, IMG_SIZE - y_width},
+// アイコン設置可能な位置の列挙
+var iconPoints = [6]image.Rectangle{
+	image.Rect(1*x_width-r, y_width-r, 1*x_width+r, y_width+r),
+	image.Rect(2*x_width-r, y_width-r, 2*x_width+r, y_width+r),
+	image.Rect(3*x_width-r, y_width-r, 3*x_width+r, y_width+r),
+	image.Rect(1*x_width-r, 5*y_width-r, 1*x_width+r, 5*y_width+r),
+	image.Rect(2*x_width-r, 5*y_width-r, 2*x_width+r, 5*y_width+r),
+	image.Rect(3*x_width-r, 5*y_width-r, 3*x_width+r, 5*y_width+r),
 }
 
 // アイコン(=写真)を描画
@@ -47,49 +46,46 @@ func (t *Thumbnail) PutIcons() error {
 	return nil
 }
 
-func (icon *Icon) DrawIconImage(img *image.RGBA) error {
-	icon.C.DrawBounds(img, DARK_GREEN)
-	return nil
-}
+func (icon *Icon) DrawIconImage(distImg *image.RGBA) error {
 
-// 枠を書く
-func (c *Circle) DrawBounds(img *image.RGBA, col color.Color) {
-	for rad := 0.0; rad < 2.0*float64(c.r); rad += 0.1 {
-		for i := 0; i < 5; i++ {
-			x := int(float64(c.p.X) + float64(c.r+i)*math.Cos(rad))
-			y := int(float64(c.p.Y) + float64(c.r+i)*math.Sin(rad))
-			img.Set(x, y, col)
-
-		}
+	// アイコン画像生成
+	pic, err := NewPicture(icon.ImageUrl)
+	if err != nil {
+		return err
 	}
+	icon.pic = pic
+	iconImg := pic.Img.SubImage(pic.Img.Rect)
+	draw.Draw(distImg, icon.rect, iconImg, image.Pt(0, 0), draw.Over)
+
+	return nil
 }
 
 // アイコンをセット
 // ライブラリに書く必要は別にない...
-func CreateIcons(num int) ([]*Icon, error) {
-	if num > MAX_ICON_NUM {
-		return nil, errors.New("cannot create icons over 6")
-	}
+func CreateIcons(urls []string) ([]*Icon, error) {
 
 	var icons []*Icon
 
 	// iconを配置する場所をランダムに決定
-	var points = icon_points[:]
+	points := iconPoints[:]
+	iconNum := len(urls)
 
 	rand.Seed(time.Now().UnixNano())
-	for i := 0; i < num; i++ {
+	var rnum int
+	for i := 0; i < iconNum && i < MAX_ICON_NUM; i++ {
 		icon := &Icon{}
-		rnum := rand.Intn(len(points))
-		icon.C = Circle{r: IMG_SIZE / 10, p: points[rnum]}
-		fmt.Println(icon.C)
-		points = unset(points, rnum)
+		// 設置場所
+		rnum = rand.Intn(len(points))
+		icon.rect = points[rnum]
+		points = append(points[:rnum], points[rnum+1:]...)
+
+		// 画像
+		rnum = rand.Intn(len(urls))
+		icon.ImageUrl = urls[rnum]
+		urls = append(urls[:rnum], urls[rnum+1:]...)
+
 		icons = append(icons, icon)
 	}
 
 	return icons, nil
-}
-
-// TODO 末尾削除もできる? GCちゃんと効く?
-func unset(arr []image.Point, i int) []image.Point {
-	return append(arr[:i], arr[i+1:]...)
 }

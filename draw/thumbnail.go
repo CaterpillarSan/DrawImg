@@ -1,6 +1,7 @@
 package draw
 
 import (
+	"fmt"
 	"image"
 )
 
@@ -10,7 +11,7 @@ type Thumbnail struct {
 	Title *Text
 }
 
-func NewThumbnail() *Thumbnail {
+func NewThumbnail(urls []string) *Thumbnail {
 	t := &Thumbnail{}
 	x := 0
 	y := 0
@@ -18,7 +19,7 @@ func NewThumbnail() *Thumbnail {
 	height := IMG_SIZE
 
 	t.Img = image.NewRGBA(image.Rect(x, y, width, height))
-	icons, err := CreateIcons(4)
+	icons, err := CreateIcons(urls)
 	if err != nil {
 		panic(err)
 	}
@@ -26,6 +27,8 @@ func NewThumbnail() *Thumbnail {
 	t.Icons = icons
 
 	t.FillRect()
-	t.PutIcons()
+	if err = t.PutIcons(); err != nil {
+		fmt.Println(err)
+	}
 	return t
 }
