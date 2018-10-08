@@ -21,6 +21,7 @@ func main() {
 		"./pictures/8.png",
 		"./pictures/9.png",
 		"./pictures/10.jpg",
+		"./pictures/11.png",
 	}
 	t := draw.NewThumbnail(urls)
 	// RectからRGBAを作る(ゼロ値なので黒なはず)

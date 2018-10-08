@@ -47,9 +47,11 @@ func decodeImage(imageUrl string) (*image.Image, error) {
 	return &smallImg, nil
 }
 
+// 円形に切り取る
 func cutImage(in *image.Image) *image.RGBA {
-	// 土台
+	// 土台となる無地のimage
 	out := image.NewRGBA(image.Rect(0, 0, 2*ICON_RADIUS, 2*ICON_RADIUS))
+	// 円形以外の場合はここを変える
 	mask := &circle{image.Pt(ICON_RADIUS, ICON_RADIUS), ICON_RADIUS}
 	// 画像切り取り
 	draw.DrawMask(out, out.Bounds(), *in, image.ZP, mask, image.ZP, draw.Over)
@@ -59,10 +61,12 @@ func cutImage(in *image.Image) *image.RGBA {
 // 枠を書く
 func drawBounds(img *image.RGBA, col color.Color) {
 	r := ICON_RADIUS
-	for rad := 0.0; rad < 2.0*float64(ICON_RADIUS); rad += 0.1 {
-		for i := 0; i < 5; i++ {
-			x := int(float64(r) + float64(r+i)*math.Cos(rad))
-			y := int(float64(r) + float64(r+i)*math.Sin(rad))
+	bold := ICON_RADIUS / 7
+	// TODO radianの刻みもIMAGE_SIZEによって変えるべき
+	for rad := 0.0; rad < 2.0*float64(ICON_RADIUS); rad += 0.01 {
+		for i := 0; i < bold; i++ {
+			x := int(float64(r) + float64(r-i)*math.Cos(rad))
+			y := int(float64(r) + float64(r-i)*math.Sin(rad))
 			img.Set(x, y, col)
 
 		}

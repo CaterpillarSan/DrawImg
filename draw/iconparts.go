@@ -22,6 +22,7 @@ var x_width = IMG_SIZE / (MAX_ICON_NUM/2 + 1)
 var y_width = IMG_SIZE / 6 //これは決め打ち, 間の帯のサイズ次第
 var r = ICON_RADIUS
 
+// アイコン設置可能な位置の列挙
 var iconPoints = [6]image.Rectangle{
 	image.Rect(1*x_width-r, y_width-r, 1*x_width+r, y_width+r),
 	image.Rect(2*x_width-r, y_width-r, 2*x_width+r, y_width+r),
@@ -53,8 +54,8 @@ func (icon *Icon) DrawIconImage(distImg *image.RGBA) error {
 		return err
 	}
 	icon.pic = pic
-
-	draw.Draw(distImg, icon.rect, *pic.Img, image.Pt(0, 0), draw.Over)
+	iconImg := pic.Img.SubImage(pic.Img.Rect)
+	draw.Draw(distImg, icon.rect, iconImg, image.Pt(0, 0), draw.Over)
 
 	return nil
 }
