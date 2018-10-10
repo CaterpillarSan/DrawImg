@@ -12,6 +12,11 @@ type Text struct {
 	length   int
 }
 
+func NewText(sen string) *Text {
+	text := &Text{sen, len(sen)}
+	return text
+}
+
 func (t *Thumbnail) SetTitle() error {
 	d, err := text2img.NewDrawer(text2img.Params{
 		Width:           IMG_SIZE,
@@ -24,7 +29,7 @@ func (t *Thumbnail) SetTitle() error {
 	if err != nil {
 		return err
 	}
-	textImg, err := d.Draw("We are Yakudo!")
+	textImg, err := d.Draw(t.Title.Sentence)
 	if err != nil {
 		return err
 	}

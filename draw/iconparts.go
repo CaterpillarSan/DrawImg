@@ -32,37 +32,8 @@ var iconPoints = [6]image.Rectangle{
 	image.Rect(3*x_width-r, 5*y_width-r, 3*x_width+r, 5*y_width+r),
 }
 
-// アイコン(=写真)を描画
-func (t *Thumbnail) PutIcons() error {
-	if t.Icons == nil {
-		return errors.New("There is no icons.")
-	}
-	for _, icon := range t.Icons {
-		if err := icon.DrawIconImage(t.Img); err != nil {
-			return err
-		}
-
-	}
-	return nil
-}
-
-func (icon *Icon) DrawIconImage(distImg *image.RGBA) error {
-
-	// アイコン画像生成
-	pic, err := NewPicture(icon.ImageUrl)
-	if err != nil {
-		return err
-	}
-	icon.pic = pic
-	iconImg := pic.Img.SubImage(pic.Img.Rect)
-	draw.Draw(distImg, icon.rect, iconImg, image.Pt(0, 0), draw.Over)
-
-	return nil
-}
-
 // アイコンをセット
-// ライブラリに書く必要は別にない...
-func CreateIcons(urls []string) ([]*Icon, error) {
+func NewIconList(urls []string) []*Icon {
 
 	var icons []*Icon
 
@@ -87,5 +58,33 @@ func CreateIcons(urls []string) ([]*Icon, error) {
 		icons = append(icons, icon)
 	}
 
-	return icons, nil
+	return icons
+}
+
+// アイコン(=写真)を描画
+func (t *Thumbnail) PutIcons() error {
+	if t.Icons == nil {
+		return errors.New("There is no icons.")
+	}
+	for _, icon := range t.Icons {
+		if err := icon.drawIconImage(t.Img); err != nil {
+			return err
+		}
+
+	}
+	return nil
+}
+
+func (icon *Icon) drawIconImage(distImg *image.RGBA) error {
+
+	// アイコン画像生成
+	pic, err := NewPicture(icon.ImageUrl)
+	if err != nil {
+		return err
+	}
+	icon.pic = pic
+	iconImg := pic.Img.SubImage(pic.Img.Rect)
+	draw.Draw(distImg, icon.rect, iconImg, image.Pt(0, 0), draw.Over)
+
+	return nil
 }

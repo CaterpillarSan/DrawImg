@@ -23,8 +23,18 @@ func main() {
 		"./pictures/10.jpg",
 		"./pictures/11.png",
 	}
-	t := draw.NewThumbnail(urls)
-	// RectからRGBAを作る(ゼロ値なので黒なはず)
+
+	title := "We are Yakudo!"
+	var err error
+
+	t := draw.NewThumbnail(title, urls)
+	t.FillRect()
+	if err = t.PutIcons(); err != nil {
+		panic(err)
+	}
+	if err = t.SetTitle(); err != nil {
+		panic(err)
+	}
 
 	// 出力用ファイル作成(エラー処理は略)
 	file, _ := os.Create("sample.jpg")
