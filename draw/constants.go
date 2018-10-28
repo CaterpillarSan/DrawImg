@@ -8,6 +8,11 @@ const ICON_RADIUS = IMG_SIZE / 9
 
 const MAX_ICON_NUM = 6
 
+const (
+	DIAMOND = iota
+	CIRCLE
+)
+
 const FONT_PATH = "./fonts/07LogoTypeGothic-Condense.ttf"
 const FONT_SIZE = IMG_SIZE / 12
 
