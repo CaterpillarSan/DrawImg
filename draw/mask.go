@@ -37,7 +37,7 @@ func (i *Icon) decodeImage() (*image.Image, error) {
 	f, err := os.Open(i.ImageUrl)
 	if err != nil {
 		return nil, err
-	})
+	}
 	defer f.Close()
 	originImg, _, err := image.Decode(f)
 	if err != nil {

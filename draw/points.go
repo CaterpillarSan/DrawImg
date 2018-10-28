@@ -9,8 +9,8 @@ import (
 	"time"
 )
 
-const BOAD_SIZE = 19
 const OUT_OF_BOAD = 4
+const BOAD_SIZE = OUT_OF_BOAD*2 + 11
 
 type Boad struct {
 	points [BOAD_SIZE][BOAD_SIZE]bool
@@ -37,7 +37,7 @@ func NewBoad() Boad {
 			}
 		}
 	}
-	width := IMG_SIZE / 20
+	width := IMG_SIZE / 10
 
 	return Boad{points, width}
 }
@@ -47,19 +47,19 @@ func (b *Boad) atRect(x, y, size int) image.Rectangle {
 	if size < 1 || size > 4 {
 		size = 2
 	}
-	x0 := (x - size) * b.width
-	y0 := (y - size) * b.width
-	x1 := (x + size) * b.width
-	y1 := (y + size) * b.width
+	x0 := (x - OUT_OF_BOAD - size) * b.width
+	y0 := (y - OUT_OF_BOAD - size) * b.width
+	x1 := (x - OUT_OF_BOAD + size) * b.width
+	y1 := (y - OUT_OF_BOAD + size) * b.width
 	fmt.Println("座標:", x, y, size, "Rect:", x0, y0, x1, y1)
 
 	return image.Rect(x0, y0, x1, y1)
 }
 
 func (b *Boad) fillBoad(x, y, size int) {
-	for i := -size; i < size; i++ {
+	for i := -size; i <= size; i++ {
 		num := size - int(math.Abs(float64(i)))
-		for j := -num; j < num; j++ {
+		for j := -num; j <= num; j++ {
 			b.points[x+i][y+j] = false
 		}
 	}
@@ -70,7 +70,7 @@ func (b *Boad) GetRandomRect() (*image.Rectangle, int, error) {
 	rand.Seed(time.Now().UnixNano())
 
 	// 30回でいいやろ~~
-	for i := 0; i < 30; i++ {
+	for i := 0; i < 20; i++ {
 		rx := rand.Intn(BOAD_SIZE-OUT_OF_BOAD*2) + OUT_OF_BOAD
 		ry := rand.Intn(BOAD_SIZE-OUT_OF_BOAD*2) + OUT_OF_BOAD
 		rnum := rand.Intn(10)
@@ -92,6 +92,29 @@ func (b *Boad) GetRandomRect() (*image.Rectangle, int, error) {
 			return &rect, rsize, nil
 		}
 	}
+
+	// size =2 が置けるかな
+	for i := 0; i < 10; i++ {
+		rx := rand.Intn(BOAD_SIZE-OUT_OF_BOAD*2) + OUT_OF_BOAD
+		ry := rand.Intn(BOAD_SIZE-OUT_OF_BOAD*2) + OUT_OF_BOAD
+		rsize := 2
+		if b.isAbleToPut(rx, ry, rsize) {
+			b.fillBoad(rx, ry, rsize)
+			rect := b.atRect(rx, ry, rsize)
+			return &rect, rsize, nil
+		}
+	}
+	// size = 1が置けるかな
+	for i := 0; i < 10; i++ {
+		rx := rand.Intn(BOAD_SIZE-OUT_OF_BOAD*2) + OUT_OF_BOAD
+		ry := rand.Intn(BOAD_SIZE-OUT_OF_BOAD*2) + OUT_OF_BOAD
+		rsize := 1
+		if b.isAbleToPut(rx, ry, rsize) {
+			b.fillBoad(rx, ry, rsize)
+			rect := b.atRect(rx, ry, rsize)
+			return &rect, rsize, nil
+		}
+	}
 	return nil, 1, errors.New("Cannot put icon anymore.")
 }
 
@@ -99,9 +122,9 @@ func (b *Boad) GetRandomRect() (*image.Rectangle, int, error) {
 // はみ出るものも弾いている
 // 今後どうしようか...
 func (b *Boad) isAbleToPut(x, y, size int) bool {
-	for i := -size; i < size; i++ {
+	for i := -size; i <= size; i++ {
 		num := size - int(math.Abs(float64(i)))
-		for j := -num; j < num; j++ {
+		for j := -num; j <= num; j++ {
 			if b.points[x+i][y+j] == false {
 				return false
 			}

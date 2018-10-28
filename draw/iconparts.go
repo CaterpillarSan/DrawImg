@@ -32,7 +32,7 @@ func NewIconList(urls []string) []*Icon {
 	rand.Seed(time.Now().UnixNano())
 
 	var rnum int
-	for i := 0; i < iconNum && i < MAX_ICON_NUM; i++ {
+	for i := 0; i < iconNum; i++ {
 		icon := &Icon{}
 		// 設置場所
 		rect, size, err := boad.GetRandomRect()
