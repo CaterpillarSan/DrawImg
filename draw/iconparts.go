@@ -26,11 +26,13 @@ func NewIconList(cards []model.Card) []*Icon {
 
 	var icons []*Icon
 
+	rand.Seed(time.Now().UnixNano())
+
 	// iconを配置する場所をランダムに決定
 	boad := NewBoad()
 	iconNum := len(cards)
+	frameType := rand.Intn(2)
 
-	rand.Seed(time.Now().UnixNano())
 	var rnum int
 
 	for i := 0; i < iconNum; i++ {
@@ -40,6 +42,7 @@ func NewIconList(cards []model.Card) []*Icon {
 		rnum = rand.Intn(len(cards))
 		icon.ImageUrl = cards[rnum].ImageUrl.String
 		icon.FrameColor = getFrameColor(cards[rnum].EmoID)
+		icon.FrameType = frameType
 		cards = append(cards[:rnum], cards[rnum+1:]...)
 
 		// 設置場所
