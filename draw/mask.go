@@ -14,26 +14,27 @@ type Picture struct {
 	Img *image.RGBA
 }
 
-func NewPicture(imageUrl string) (*Picture, error) {
+func (i *Icon) NewPicture() (*Picture, error) {
 	pic := &Picture{}
 	// イメージをimage.Imageに変換し, リサイズ
-	img, err := decodeImage(imageUrl)
+	img, err := i.decodeImage()
 	if err != nil {
 		return nil, err
 	}
 
+	r := int(i.rectWidth / 2)
 	// アイコンを丸く切り取る
-	out := cutImage(img)
+	out := cutImage(img, r)
 
 	// ふちをつける
-	drawBounds(out, DARK_GREEN)
+	drawBounds(out, DARK_GREEN, r)
 
 	pic.Img = out
 	return pic, nil
 }
 
-func decodeImage(imageUrl string) (*image.Image, error) {
-	f, err := os.Open(imageUrl)
+func (i *Icon) decodeImage() (*image.Image, error) {
+	f, err := os.Open(i.ImageUrl)
 	if err != nil {
 		return nil, err
 	}
@@ -42,28 +43,27 @@ func decodeImage(imageUrl string) (*image.Image, error) {
 	if err != nil {
 		return nil, err
 	}
-	smallImg := resize.Thumbnail(ICON_RADIUS*2, ICON_RADIUS*2, originImg, resize.Lanczos3)
+	smallImg := resize.Thumbnail(i.rectWidth, i.rectWidth, originImg, resize.Lanczos3)
 
 	return &smallImg, nil
 }
 
 // 円形に切り取る
-func cutImage(in *image.Image) *image.RGBA {
+func cutImage(in *image.Image, r int) *image.RGBA {
 	// 土台となる無地のimage
-	out := image.NewRGBA(image.Rect(0, 0, 2*ICON_RADIUS, 2*ICON_RADIUS))
+	out := image.NewRGBA(image.Rect(0, 0, r*2, r*2))
 	// 円形以外の場合はここを変える
-	mask := &circle{image.Pt(ICON_RADIUS, ICON_RADIUS), ICON_RADIUS}
+	mask := &circle{image.Pt(r, r), r}
 	// 画像切り取り
 	draw.DrawMask(out, out.Bounds(), *in, image.ZP, mask, image.ZP, draw.Over)
 	return out
 }
 
 // 枠を書く
-func drawBounds(img *image.RGBA, col color.Color) {
-	r := ICON_RADIUS
-	bold := ICON_RADIUS / 7
+func drawBounds(img *image.RGBA, col color.Color, r int) {
+	bold := r / 7
 	// TODO radianの刻みもIMAGE_SIZEによって変えるべき
-	for rad := 0.0; rad < 2.0*float64(ICON_RADIUS); rad += 0.01 {
+	for rad := 0.0; rad < 2.0*float64(r); rad += 0.01 {
 		for i := 0; i < bold; i++ {
 			x := int(float64(r) + float64(r-i)*math.Cos(rad))
 			y := int(float64(r) + float64(r-i)*math.Sin(rad))
