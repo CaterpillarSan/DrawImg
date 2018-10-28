@@ -2,19 +2,14 @@ package draw
 
 import (
 	"errors"
-	"fmt"
 	"image"
 	"math"
 	"math/rand"
 	"time"
 )
 
-const OUT_OF_BOAD = 4
-const BOAD_SIZE = OUT_OF_BOAD*2 + 11
-
 type Boad struct {
 	points [BOAD_SIZE][BOAD_SIZE]bool
-	width  int
 }
 
 /*
@@ -37,9 +32,8 @@ func NewBoad() Boad {
 			}
 		}
 	}
-	width := IMG_SIZE / 10
 
-	return Boad{points, width}
+	return Boad{points}
 }
 
 func (b *Boad) atRect(x, y, size int) image.Rectangle {
@@ -47,11 +41,10 @@ func (b *Boad) atRect(x, y, size int) image.Rectangle {
 	if size < 1 || size > 4 {
 		size = 2
 	}
-	x0 := (x - OUT_OF_BOAD - size) * b.width
-	y0 := (y - OUT_OF_BOAD - size) * b.width
-	x1 := (x - OUT_OF_BOAD + size) * b.width
-	y1 := (y - OUT_OF_BOAD + size) * b.width
-	fmt.Println("座標:", x, y, size, "Rect:", x0, y0, x1, y1)
+	x0 := (x - OUT_OF_BOAD - size) * WIDTH
+	y0 := (y - OUT_OF_BOAD - size) * WIDTH
+	x1 := (x - OUT_OF_BOAD + size) * WIDTH
+	y1 := (y - OUT_OF_BOAD + size) * WIDTH
 
 	return image.Rect(x0, y0, x1, y1)
 }

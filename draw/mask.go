@@ -1,40 +1,77 @@
 package draw
 
 import (
+	"bytes"
 	"image"
 	"image/color"
 	"image/draw"
+	"io/ioutil"
 	"math"
+	"net/http"
+	"net/url"
 	"os"
 
 	"github.com/nfnt/resize"
 )
 
-type Picture struct {
-	Img *image.RGBA
+func (icon *Icon) NewPicture() error {
+	// イメージをimage.Imageに変換し, リサイズ
+	img, err := icon.decodeImage()
+	if err != nil {
+		return err
+	}
+
+	r := int(icon.rectWidth / 2)
+	// アイコンを丸く切り取り, ふちをつける
+	out := cutImage(img, icon.FrameType, icon.FrameColor, r)
+
+	icon.img = out
+	return nil
 }
 
-func (i *Icon) NewPicture() (*Picture, error) {
-	pic := &Picture{}
-	// イメージをimage.Imageに変換し, リサイズ
-	img, err := i.decodeImage()
+func (icon *Icon) decodeImage() (*image.Image, error) {
+	u, err := url.Parse(icon.ImageUrl)
+	if err != nil {
+		return nil, err
+	}
+	var originImg image.Image
+
+	if u.Scheme == "https" && u.Host == "s3-ap-northeast-1.amazonaws.com" {
+		// Get image
+		originImg, err = getImageFromUrl(icon.ImageUrl)
+	} else {
+		// デバッグ用, ローカルのファイルを取り出す
+		originImg, err = getImageFromLocal(icon.ImageUrl)
+		// return nil, errors.New("Unauthorized URL") // TODO : エラーちゃんとする
+	}
 	if err != nil {
 		return nil, err
 	}
 
-	r := int(i.rectWidth / 2)
-	// アイコンを丸く切り取る
-	out := cutImage(img, r)
-
-	// ふちをつける
-	drawBounds(out, DARK_GREEN, r)
-
-	pic.Img = out
-	return pic, nil
+	smallImg := resize.Thumbnail(icon.rectWidth, icon.rectWidth, originImg, resize.Lanczos3)
+	return &smallImg, nil
 }
 
-func (i *Icon) decodeImage() (*image.Image, error) {
-	f, err := os.Open(i.ImageUrl)
+func getImageFromUrl(imgUrl string) (image.Image, error) {
+	resp, err := http.Get(imgUrl)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+	data, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	img, _, err := image.Decode(bytes.NewBuffer(data))
+	if err != nil {
+		return nil, err
+	}
+
+	return img, nil
+}
+
+func getImageFromLocal(imgUrl string) (image.Image, error) {
+	f, err := os.Open(imgUrl)
 	if err != nil {
 		return nil, err
 	}
@@ -43,24 +80,24 @@ func (i *Icon) decodeImage() (*image.Image, error) {
 	if err != nil {
 		return nil, err
 	}
-	smallImg := resize.Thumbnail(i.rectWidth, i.rectWidth, originImg, resize.Lanczos3)
-
-	return &smallImg, nil
+	return originImg, nil
 }
 
 // 円形に切り取る
-func cutImage(in *image.Image, r int) *image.RGBA {
+func cutImage(in *image.Image, frameType int, col color.Color, r int) *image.RGBA {
 	// 土台となる無地のimage
-	out := image.NewRGBA(image.Rect(0, 0, r*2, r*2))
+	out := image.NewRGBA(image.Rect(0, 0, 2*r, 2*r))
 	// 円形以外の場合はここを変える
 	mask := &circle{image.Pt(r, r), r}
 	// 画像切り取り
 	draw.DrawMask(out, out.Bounds(), *in, image.ZP, mask, image.ZP, draw.Over)
+	// 枠
+	drawBounds(out, frameType, col, r)
 	return out
 }
 
 // 枠を書く
-func drawBounds(img *image.RGBA, col color.Color, r int) {
+func drawBounds(img *image.RGBA, frameType int, col color.Color, r int) {
 	bold := r / 7
 	// TODO radianの刻みもIMAGE_SIZEによって変えるべき
 	for rad := 0.0; rad < 2.0*float64(r); rad += 0.01 {

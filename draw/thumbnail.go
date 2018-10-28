@@ -2,6 +2,8 @@ package draw
 
 import (
 	"image"
+
+	"github.com/CaterpillarSan/DrawImg/model"
 )
 
 type Thumbnail struct {
@@ -10,7 +12,7 @@ type Thumbnail struct {
 	Title *Text
 }
 
-func NewThumbnail(title string, urls []string) *Thumbnail {
+func NewThumbnail(title string, cards []model.Card) *Thumbnail {
 	t := &Thumbnail{}
 	x := 0
 	y := 0
@@ -21,7 +23,7 @@ func NewThumbnail(title string, urls []string) *Thumbnail {
 	t.Img = image.NewRGBA(image.Rect(x, y, width, height))
 
 	// アイコン画像一覧
-	t.Icons = NewIconList(urls)
+	t.Icons = NewIconList(cards)
 
 	// タイトル
 	t.Title = NewText(title)

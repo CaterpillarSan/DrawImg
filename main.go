@@ -5,29 +5,31 @@ import (
 	"os"
 
 	"github.com/CaterpillarSan/DrawImg/draw"
+	"github.com/CaterpillarSan/DrawImg/model"
+	"gopkg.in/guregu/null.v3"
 )
 
 func main() {
 
-	urls := []string{
-		"./pictures/0.png",
-		"./pictures/1.png",
-		"./pictures/2.png",
-		"./pictures/3.png",
-		"./pictures/4.png",
-		"./pictures/5.png",
-		"./pictures/6.png",
-		"./pictures/7.png",
-		"./pictures/8.png",
-		"./pictures/9.png",
-		"./pictures/10.jpg",
-		"./pictures/11.png",
+	cards := []model.Card{
+		model.Card{ImageUrl: null.NewString("./pictures/0.png", true), EmoID: 1},
+		model.Card{ImageUrl: null.NewString("./pictures/1.png", true), EmoID: 2},
+		model.Card{ImageUrl: null.NewString("./pictures/2.png", true), EmoID: 3},
+		model.Card{ImageUrl: null.NewString("./pictures/3.png", true), EmoID: 4},
+		model.Card{ImageUrl: null.NewString("./pictures/4.png", true), EmoID: 5},
+		model.Card{ImageUrl: null.NewString("./pictures/5.png", true), EmoID: 1},
+		model.Card{ImageUrl: null.NewString("./pictures/6.png", true), EmoID: 2},
+		model.Card{ImageUrl: null.NewString("./pictures/7.png", true), EmoID: 3},
+		model.Card{ImageUrl: null.NewString("./pictures/8.png", true), EmoID: 4},
+		model.Card{ImageUrl: null.NewString("./pictures/9.png", true), EmoID: 5},
+		model.Card{ImageUrl: null.NewString("./pictures/10.jpg", true), EmoID: 1},
+		model.Card{ImageUrl: null.NewString("./pictures/11.png", true), EmoID: 2},
 	}
 
 	title := "We are Yakudo!"
 	var err error
 
-	t := draw.NewThumbnail(title, urls)
+	t := draw.NewThumbnail(title, cards)
 	t.FillRect()
 	if err = t.PutIcons(); err != nil {
 		panic(err)
