@@ -12,8 +12,8 @@ const BOAD_SIZE = OUT_OF_BOAD*2 + 11
 const WIDTH = IMG_SIZE / 10
 
 const (
-	DIAMOND = iota
-	CIRCLE
+	DIAMOND = 0
+	CIRCLE  = 1
 )
 
 const FONT_PATH = "./fonts/07LogoTypeGothic-Condense.ttf"

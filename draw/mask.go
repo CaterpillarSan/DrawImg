@@ -83,12 +83,20 @@ func getImageFromLocal(imgUrl string) (image.Image, error) {
 	return originImg, nil
 }
 
-// 円形に切り取る
+// 画像を切り取る
 func cutImage(in *image.Image, frameType int, col color.Color, r int) *image.RGBA {
 	// 土台となる無地のimage
 	out := image.NewRGBA(image.Rect(0, 0, 2*r, 2*r))
+	var mask image.Image
 	// 円形以外の場合はここを変える
-	mask := &circle{image.Pt(r, r), r}
+	switch frameType {
+	case DIAMOND:
+		mask = &diamond{image.Pt(r, r), r}
+	case CIRCLE:
+		mask = &circle{image.Pt(r, r), r}
+	default:
+		mask = &diamond{image.Pt(r, r), r}
+	}
 	// 画像切り取り
 	draw.DrawMask(out, out.Bounds(), *in, image.ZP, mask, image.ZP, draw.Over)
 	// 枠
@@ -97,7 +105,31 @@ func cutImage(in *image.Image, frameType int, col color.Color, r int) *image.RGB
 }
 
 // 枠を書く
-func drawBounds(img *image.RGBA, frameType int, col color.Color, r int) {
+func drawBounds(out *image.RGBA, frameType int, col color.Color, r int) {
+	switch frameType {
+	case DIAMOND:
+		drawDiamondBounds(out, frameType, col, r)
+	case CIRCLE:
+		drawCircleBounds(out, frameType, col, r)
+	default:
+		drawDiamondBounds(out, frameType, col, r)
+	}
+
+}
+
+func drawDiamondBounds(img *image.RGBA, frameType int, col color.Color, r int) {
+	bold := r / 7
+	for i := 0; i < r; i++ {
+		for j := 0; j < bold && i+j <= r; j++ {
+			img.Set(i+j, r-i, col)
+			img.Set(i+j, r+i, col)
+			img.Set(2*r-i-j, r+i, col)
+			img.Set(2*r-i-j, r-i, col)
+		}
+	}
+
+}
+func drawCircleBounds(img *image.RGBA, frameType int, col color.Color, r int) {
 	bold := r / 7
 	// TODO radianの刻みもIMAGE_SIZEによって変えるべき
 	for rad := 0.0; rad < 2.0*float64(r); rad += 0.01 {
@@ -112,6 +144,7 @@ func drawBounds(img *image.RGBA, frameType int, col color.Color, r int) {
 
 // *************************************************************** //
 // 画像マスク用
+// interface image.Image
 
 type circle struct {
 	p image.Point
@@ -133,3 +166,25 @@ func (c *circle) At(x, y int) color.Color {
 	}
 	return color.Alpha{0}
 }
+
+type diamond struct {
+	p image.Point
+	r int
+}
+
+func (d *diamond) ColorModel() color.Model {
+	return color.AlphaModel
+}
+
+func (d *diamond) Bounds() image.Rectangle {
+	return image.Rect(d.p.X-d.r, d.p.Y-d.r, d.p.X+d.r, d.p.Y+d.r)
+}
+
+func (d *diamond) At(x, y int) color.Color {
+	if y > x-d.r && y < x+d.r && y > -x+d.r && y < -x+3*d.r {
+		return color.Alpha{255}
+	}
+	return color.Alpha{0}
+}
+
+// *************************************************************** //
