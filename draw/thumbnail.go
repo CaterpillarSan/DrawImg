@@ -22,11 +22,14 @@ func NewThumbnail(title string, cards []model.Card) *Thumbnail {
 	// イメージの土台
 	t.Img = image.NewRGBA(image.Rect(x, y, width, height))
 
+	// ボード
+	boad := NewBoad()
+
 	// アイコン画像一覧
-	t.Icons = NewIconList(cards)
+	t.Icons = NewIconList(cards, boad)
 
 	// タイトル
-	t.Title = NewText(title)
+	t.Title = NewText(title, boad)
 
 	return t
 }

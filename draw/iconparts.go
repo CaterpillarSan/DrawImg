@@ -22,15 +22,15 @@ type Icon struct {
 }
 
 // アイコンをセット
-func NewIconList(cards []model.Card) []*Icon {
+func NewIconList(cards []model.Card, boad Boad) []*Icon {
 
 	var icons []*Icon
 
 	rand.Seed(time.Now().UnixNano())
 
 	// iconを配置する場所をランダムに決定
-	boad := NewBoad()
 	iconNum := len(cards)
+
 	// 丸かひし形か
 	frameType := rand.Intn(2)
 

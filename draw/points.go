@@ -9,7 +9,8 @@ import (
 )
 
 type Boad struct {
-	points [BOAD_SIZE][BOAD_SIZE]bool
+	points     [BOAD_SIZE][BOAD_SIZE]bool
+	titlePoint string
 }
 
 /*
@@ -17,8 +18,17 @@ type Boad struct {
 */
 
 func NewBoad() Boad {
+	b := Boad{}
 	// bitmap的な
 	points := [BOAD_SIZE][BOAD_SIZE]bool{}
+	// タイトルを表示する位置を決める
+	rand.Seed(time.Now().UnixNano())
+	switch rand.Intn(2) {
+	case 0:
+		b.titlePoint = "header"
+	default:
+		b.titlePoint = "footer"
+	}
 	// boad初期化
 	// 外周はfalse
 	for i := 0; i < BOAD_SIZE; i++ {
@@ -27,13 +37,19 @@ func NewBoad() Boad {
 			if i < OUT_OF_BOAD || i >= BOAD_SIZE-OUT_OF_BOAD ||
 				j < OUT_OF_BOAD || j >= BOAD_SIZE-OUT_OF_BOAD {
 				points[i][j] = false
+			} else if b.titlePoint == "header" && j < OUT_OF_BOAD+2 {
+				points[i][j] = false
+
+			} else if b.titlePoint == "footer" && j > BOAD_SIZE-OUT_OF_BOAD-2 {
+				points[i][j] = false
 			} else {
 				points[i][j] = true
 			}
 		}
 	}
 
-	return Boad{points}
+	b.points = points
+	return b
 }
 
 func (b *Boad) atRect(x, y, size int) image.Rectangle {
