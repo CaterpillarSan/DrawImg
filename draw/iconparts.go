@@ -22,7 +22,7 @@ type Icon struct {
 }
 
 // アイコンをセット
-func NewIconList(cards []model.Card, boad Boad) []*Icon {
+func NewIconList(cards []model.Card, boad Boad, bkColor string) []*Icon {
 
 	var icons []*Icon
 
@@ -42,7 +42,7 @@ func NewIconList(cards []model.Card, boad Boad) []*Icon {
 		// 画像
 		rnum = rand.Intn(len(cards))
 		icon.ImageUrl = cards[rnum].ImageUrl.String
-		icon.FrameColor = getFrameColor(cards[rnum].EmoID)
+		icon.FrameColor = getFrameColor(cards[rnum].EmoID, bkColor)
 		icon.FrameType = frameType
 		cards = append(cards[:rnum], cards[rnum+1:]...)
 
@@ -62,11 +62,11 @@ func NewIconList(cards []model.Card, boad Boad) []*Icon {
 }
 
 // emo IDからフレームの色を決定する
-func getFrameColor(emoID int) color.Color {
-	if emoID > len(EmoColor) {
+func getFrameColor(emoID int, bkColor string) color.Color {
+	if emoID > len(ColorMap[bkColor]) {
 		return GRAY
 	}
-	return EmoColor[emoID-1]
+	return ColorMap[bkColor][emoID-1]
 }
 
 // アイコン(=写真)を描画

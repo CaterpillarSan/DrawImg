@@ -2,6 +2,7 @@ package draw
 
 import (
 	"image"
+	"image/color"
 	"image/draw"
 
 	"github.com/Iwark/text2img"
@@ -24,7 +25,7 @@ func (t *Thumbnail) SetTitle() error {
 		Height:          WIDTH * 2,
 		FontPath:        FONT_PATH,
 		BackgroundColor: MUSYOKU_TOUMEI,
-		TextColor:       DARK_GREEN,
+		TextColor:       (ColorMap[t.BKColor][0]).(color.RGBA),
 	})
 	if err != nil {
 		return err
