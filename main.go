@@ -19,7 +19,7 @@ func main() {
 		// model.Card{ImageUrl: null.NewString("./pictures/4.png", true), EmoID: 5},
 		// model.Card{ImageUrl: null.NewString("./pictures/5.png", true), EmoID: 1},
 		// model.Card{ImageUrl: null.NewString("./pictures/6.png", true), EmoID: 2},
-		// model.Card{ImageUrl: null.NewString("./pictures/7.png", true), EmoID: 3},
+		model.Card{ImageUrl: null.NewString("./pictures/7.png", true), EmoID: 3},
 		model.Card{ImageUrl: null.NewString("./pictures/8.png", true), EmoID: 4},
 		model.Card{ImageUrl: null.NewString("./pictures/9.png", true), EmoID: 5},
 		model.Card{ImageUrl: null.NewString("./pictures/10.jpg", true), EmoID: 1},
