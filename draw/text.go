@@ -8,21 +8,21 @@ import (
 )
 
 type Text struct {
-	Sentence string
-	length   int
+	Sentence  string
+	length    int
+	placement string
 }
 
-func NewText(sen string) *Text {
-	text := &Text{sen, len(sen)}
+func NewText(sen string, boad Boad) *Text {
+	text := &Text{sen, len(sen), boad.titlePoint}
 	return text
 }
 
 func (t *Thumbnail) SetTitle() error {
 	d, err := text2img.NewDrawer(text2img.Params{
 		Width:           IMG_SIZE,
-		Height:          IMG_SIZE / 3,
+		Height:          WIDTH * 2,
 		FontPath:        FONT_PATH,
-		FontSize:        FONT_SIZE,
 		BackgroundColor: MUSYOKU_TOUMEI,
 		TextColor:       DARK_GREEN,
 	})
@@ -34,7 +34,13 @@ func (t *Thumbnail) SetTitle() error {
 		return err
 	}
 
-	rect := image.Rect(0, IMG_SIZE/3, IMG_SIZE, IMG_SIZE*2/3)
+	var rect image.Rectangle
+	switch t.Title.placement {
+	case "header":
+		rect = image.Rect(0, 0, IMG_SIZE, WIDTH*2)
+	case "footer":
+		rect = image.Rect(0, IMG_SIZE-WIDTH*2, IMG_SIZE, IMG_SIZE)
+	}
 
 	// サムネイル画像と合成
 	draw.Draw(t.Img, rect, textImg, image.Pt(0, 0), draw.Over)
