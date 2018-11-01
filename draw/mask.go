@@ -48,7 +48,7 @@ func (icon *Icon) decodeImage() (*image.Image, error) {
 		return nil, err
 	}
 
-	smallImg := resize.Thumbnail(icon.rectWidth, icon.rectWidth, originImg, resize.Lanczos3)
+	smallImg := resizeSquare(originImg, icon.rectWidth)
 	return &smallImg, nil
 }
 
@@ -83,12 +83,29 @@ func getImageFromLocal(imgUrl string) (image.Image, error) {
 	return originImg, nil
 }
 
+// 画像を正方形に整形
+func resizeSquare(img image.Image, width uint) image.Image {
+	xx := img.Bounds().Dx()
+	yy := img.Bounds().Dy()
+	len := int(math.Min(float64(xx), float64(yy)))
+	var point image.Point
+	if xx > yy {
+		point = image.Pt((xx-yy)/2, 0)
+	} else {
+		point = image.Pt(0, (yy-xx)/2)
+	}
+	// 土台となる無地のimage
+	out := image.NewRGBA(image.Rect(0, 0, len, len))
+	draw.Draw(out, out.Bounds(), img, point, draw.Src)
+	smallImg := resize.Thumbnail(width, width, out, resize.Lanczos3)
+	return smallImg
+}
+
 // 画像を切り取る
 func cutImage(in *image.Image, frameType int, col color.Color, r int) *image.RGBA {
 	// 土台となる無地のimage
 	out := image.NewRGBA(image.Rect(0, 0, 2*r, 2*r))
-	var mask image.Image
-	// 円形以外の場合はここを変える
+	var mask image.Image // 円形以外の場合はここを変える
 	switch frameType {
 	case DIAMOND:
 		mask = &diamond{image.Pt(r, r), r}
@@ -138,6 +155,40 @@ func drawCircleBounds(img *image.RGBA, frameType int, col color.Color, r int) {
 			y := int(float64(r) + float64(r-i)*math.Sin(rad))
 			img.Set(x, y, col)
 
+		}
+	}
+}
+
+// ************************************************************** //
+// 正方形作ったけどいらなかった...
+
+type square struct {
+	width  int
+	height int
+}
+
+func (s *square) ColorModel() color.Model {
+	return color.AlphaModel
+}
+
+func (s *square) Bounds() image.Rectangle {
+	return image.Rect(0, 0, s.width, s.height)
+}
+
+func (s *square) At(x, y int) color.Color {
+	if s.width > s.height {
+		d := (s.width - s.height) / 2
+		if x < d || d < x {
+			return color.Alpha{0}
+		} else {
+			return color.Alpha{255}
+		}
+	} else {
+		d := (s.height - s.width) / 2
+		if y < d || d < x {
+			return color.Alpha{0}
+		} else {
+			return color.Alpha{255}
 		}
 	}
 }

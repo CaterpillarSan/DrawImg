@@ -12,18 +12,19 @@ import (
 func main() {
 
 	cards := []model.Card{
-		model.Card{ImageUrl: null.NewString("./pictures/0.png", true), EmoID: 1},
-		model.Card{ImageUrl: null.NewString("./pictures/1.png", true), EmoID: 2},
-		model.Card{ImageUrl: null.NewString("./pictures/2.png", true), EmoID: 3},
-		model.Card{ImageUrl: null.NewString("./pictures/3.png", true), EmoID: 4},
-		model.Card{ImageUrl: null.NewString("./pictures/4.png", true), EmoID: 5},
-		model.Card{ImageUrl: null.NewString("./pictures/5.png", true), EmoID: 1},
-		model.Card{ImageUrl: null.NewString("./pictures/6.png", true), EmoID: 2},
-		model.Card{ImageUrl: null.NewString("./pictures/7.png", true), EmoID: 3},
+		// model.Card{ImageUrl: null.NewString("./pictures/0.png", true), EmoID: 1},
+		// model.Card{ImageUrl: null.NewString("./pictures/1.png", true), EmoID: 2},
+		// model.Card{ImageUrl: null.NewString("./pictures/2.png", true), EmoID: 3},
+		// model.Card{ImageUrl: null.NewString("./pictures/3.png", true), EmoID: 4},
+		// model.Card{ImageUrl: null.NewString("./pictures/4.png", true), EmoID: 5},
+		// model.Card{ImageUrl: null.NewString("./pictures/5.png", true), EmoID: 1},
+		// model.Card{ImageUrl: null.NewString("./pictures/6.png", true), EmoID: 2},
+		// model.Card{ImageUrl: null.NewString("./pictures/7.png", true), EmoID: 3},
 		model.Card{ImageUrl: null.NewString("./pictures/8.png", true), EmoID: 4},
 		model.Card{ImageUrl: null.NewString("./pictures/9.png", true), EmoID: 5},
 		model.Card{ImageUrl: null.NewString("./pictures/10.jpg", true), EmoID: 1},
 		model.Card{ImageUrl: null.NewString("./pictures/11.png", true), EmoID: 2},
+		model.Card{ImageUrl: null.NewString("./pictures/12.jpeg", true), EmoID: 1},
 	}
 
 	title := "We are Yakudo!"
