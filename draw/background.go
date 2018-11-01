@@ -1,20 +1,25 @@
 package draw
 
-func (t *Thumbnail) FillRect() {
-	// TODO 背景用にRGPAセットをいくつか用意しておき, コピーする感じかなぁ...
-	// メモリコピーと, for文でsetどっちが早いんだろう...
-	// というか, 背景を画像で何種類か作っておいてimage/drawが正解そう...
-	rect := t.Img.Rect
+import (
+	"image/draw"
+	"math/rand"
+	"strconv"
+	"time"
+)
 
-	boder := rect.Max.Y / 3
+// 背景を準備する
+func (t *Thumbnail) FillRect() error {
 
-	for h := rect.Min.Y; h < rect.Max.Y; h++ {
-		for v := rect.Min.X; v < rect.Max.X; v++ {
-			if h/boder == 1 {
-				t.Img.Set(v, h, LIGHT_GREEN)
-			} else {
-				t.Img.Set(v, h, SHIBU_GREEN)
-			}
-		}
+	rand.Seed(time.Now().UnixNano())
+
+	backgroundUrl := BACKGROUND_PATH + t.BKColor + "/" + strconv.Itoa(rand.Intn(4)) + ".png"
+	backgroundImg, err := getImageFromLocal(backgroundUrl)
+	if err != nil {
+		return err
 	}
+	backgroundImg = resizeSquare(backgroundImg, uint(IMG_SIZE))
+	// image.Image -> image.RGBAの型変換がわからず...w
+	b := backgroundImg.Bounds()
+	draw.Draw(t.Img, t.Img.Bounds(), backgroundImg, b.Min, draw.Src)
+	return nil
 }
