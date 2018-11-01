@@ -78,52 +78,25 @@ func (b *Boad) GetRandomRect() (*image.Rectangle, int, error) {
 
 	rand.Seed(time.Now().UnixNano())
 
-	// 30回でいいやろ~~
-	for i := 0; i < 20; i++ {
-		rx := rand.Intn(BOAD_SIZE-OUT_OF_BOAD*2) + OUT_OF_BOAD
-		ry := rand.Intn(BOAD_SIZE-OUT_OF_BOAD*2) + OUT_OF_BOAD
-		rnum := rand.Intn(10)
-		// iconsizeのランダムな決定
-		var rsize int
-		switch {
-		case rnum == 0:
-			rsize = 1
-		case rnum < 4:
-			rsize = 2
-		case rnum < 8:
-			rsize = 3
-		default:
-			rsize = 4
-		}
-		if b.isAbleToPut(rx, ry, rsize) {
-			b.fillBoad(rx, ry, rsize)
-			rect := b.atRect(rx, ry, rsize)
-			return &rect, rsize, nil
+	// サイズ大きい順に置ければ置く
+	// size:
+	// - 4 -> 6回
+	// - 3 -> 12回
+	// - 2 -> 18回
+	// - 1 -> 24回
+	// 挑戦する
+	for size := 4; size > 0; size-- {
+		for i := 0; i < (5-size)*6; i++ {
+			rx := rand.Intn(BOAD_SIZE-OUT_OF_BOAD*2) + OUT_OF_BOAD
+			ry := rand.Intn(BOAD_SIZE-OUT_OF_BOAD*2) + OUT_OF_BOAD
+			if b.isAbleToPut(rx, ry, size) {
+				b.fillBoad(rx, ry, size)
+				rect := b.atRect(rx, ry, size)
+				return &rect, size, nil
+			}
 		}
 	}
 
-	// size =2 が置けるかな
-	for i := 0; i < 10; i++ {
-		rx := rand.Intn(BOAD_SIZE-OUT_OF_BOAD*2) + OUT_OF_BOAD
-		ry := rand.Intn(BOAD_SIZE-OUT_OF_BOAD*2) + OUT_OF_BOAD
-		rsize := 2
-		if b.isAbleToPut(rx, ry, rsize) {
-			b.fillBoad(rx, ry, rsize)
-			rect := b.atRect(rx, ry, rsize)
-			return &rect, rsize, nil
-		}
-	}
-	// size = 1が置けるかな
-	for i := 0; i < 10; i++ {
-		rx := rand.Intn(BOAD_SIZE-OUT_OF_BOAD*2) + OUT_OF_BOAD
-		ry := rand.Intn(BOAD_SIZE-OUT_OF_BOAD*2) + OUT_OF_BOAD
-		rsize := 1
-		if b.isAbleToPut(rx, ry, rsize) {
-			b.fillBoad(rx, ry, rsize)
-			rect := b.atRect(rx, ry, rsize)
-			return &rect, rsize, nil
-		}
-	}
 	return nil, 1, errors.New("Cannot put icon anymore.")
 }
 

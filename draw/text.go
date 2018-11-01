@@ -45,8 +45,6 @@ func (t *Thumbnail) SetTitle() error {
 	// サムネイル画像と合成
 	draw.Draw(t.Img, rect, textImg, image.Pt(0, 0), draw.Over)
 
-	// file, _ := os.Create("test.jpg")
-	// err = jpeg.Encode(file, img, &jpeg.Options{Quality: 100})
 	return nil
 
 }
