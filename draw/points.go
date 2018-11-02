@@ -40,7 +40,7 @@ func NewBoad() Boad {
 			} else if b.titlePoint == "header" && j < OUT_OF_BOAD+2 {
 				points[i][j] = false
 
-			} else if b.titlePoint == "footer" && j > BOAD_SIZE-OUT_OF_BOAD-2 {
+			} else if b.titlePoint == "footer" && j > BOAD_SIZE-OUT_OF_BOAD-3 {
 				points[i][j] = false
 			} else {
 				points[i][j] = true
