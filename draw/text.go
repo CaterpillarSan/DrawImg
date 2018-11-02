@@ -22,7 +22,7 @@ func NewText(sen string, boad Boad) *Text {
 func (t *Thumbnail) SetTitle() error {
 	d, err := text2img.NewDrawer(text2img.Params{
 		Width:           IMG_SIZE,
-		Height:          WIDTH * 2,
+		Height:          WIDTH * 3,
 		FontPath:        FONT_PATH,
 		BackgroundColor: MUSYOKU_TOUMEI,
 		TextColor:       (ColorMap[t.BKColor][0]).(color.RGBA),
@@ -30,6 +30,8 @@ func (t *Thumbnail) SetTitle() error {
 	if err != nil {
 		return err
 	}
+
+	// TODO タイトルが短かった時の処理をちゃんとする
 	textImg, err := d.Draw(t.Title.Sentence)
 	if err != nil {
 		return err
@@ -38,9 +40,9 @@ func (t *Thumbnail) SetTitle() error {
 	var rect image.Rectangle
 	switch t.Title.placement {
 	case "header":
-		rect = image.Rect(0, 0, IMG_SIZE, WIDTH*2)
+		rect = image.Rect(0, -WIDTH, IMG_SIZE, WIDTH*3)
 	case "footer":
-		rect = image.Rect(0, IMG_SIZE-WIDTH*2, IMG_SIZE, IMG_SIZE)
+		rect = image.Rect(0, IMG_SIZE-WIDTH*3, IMG_SIZE, IMG_SIZE)
 	}
 
 	// サムネイル画像と合成

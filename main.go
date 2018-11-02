@@ -27,7 +27,9 @@ func main() {
 		model.Card{ImageUrl: null.NewString("./pictures/12.jpeg", true), EmoID: 3},
 	}
 
-	title := "We are Yakudo!"
+	title := "We are Yakudo"
+	// title := "a"
+	// title := "12345678901234567890123456789012"
 	var err error
 
 	t := draw.NewThumbnail(title, cards)

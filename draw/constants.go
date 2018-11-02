@@ -4,12 +4,11 @@ import "image/color"
 
 const IMG_SIZE = 512
 
-const MAX_ICON_NUM = 10
-
 const OUT_OF_BOAD = 4 // = num of type
-const BOAD_SIZE = OUT_OF_BOAD*2 + 11
+const ACTIVE_FIEAD = 11
+const BOAD_SIZE = OUT_OF_BOAD*2 + ACTIVE_FIEAD
 
-const WIDTH = IMG_SIZE / 10
+const WIDTH = IMG_SIZE / ACTIVE_FIEAD
 
 const (
 	DIAMOND = 0
@@ -17,8 +16,6 @@ const (
 )
 
 const FONT_PATH = "./metadata/fonts/07LogoTypeGothic-Condense.ttf"
-const FONT_SIZE = IMG_SIZE / 12
-
 const BACKGROUND_PATH = "./metadata/backgrounds/"
 
 // ****************************** //
