@@ -2,7 +2,6 @@ package draw
 
 import (
 	"image"
-	"image/color"
 	"image/draw"
 
 	"github.com/Iwark/text2img"
@@ -24,8 +23,8 @@ func (t *Thumbnail) SetTitle() error {
 		Width:           IMG_SIZE,
 		Height:          WIDTH * 3,
 		FontPath:        FONT_PATH,
-		BackgroundColor: MUSYOKU_TOUMEI,
-		TextColor:       (ColorMap[t.BKColor][0]).(color.RGBA),
+		BackgroundColor: TITLE_BACKGROUND,
+		TextColor:       TITLE_CHAR,
 	})
 	if err != nil {
 		return err
@@ -37,13 +36,7 @@ func (t *Thumbnail) SetTitle() error {
 		return err
 	}
 
-	var rect image.Rectangle
-	switch t.Title.placement {
-	case "header":
-		rect = image.Rect(0, -WIDTH, IMG_SIZE, WIDTH*3)
-	case "footer":
-		rect = image.Rect(0, IMG_SIZE-WIDTH*3, IMG_SIZE, IMG_SIZE)
-	}
+	rect := image.Rect(0, IMG_SIZE-WIDTH*3, IMG_SIZE, IMG_SIZE)
 
 	// サムネイル画像と合成
 	draw.Draw(t.Img, rect, textImg, image.Pt(0, 0), draw.Over)

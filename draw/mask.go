@@ -21,11 +21,7 @@ func (icon *Icon) NewPicture() error {
 		return err
 	}
 
-	r := int(icon.rectWidth / 2)
-	// アイコンを丸く切り取り, ふちをつける
-	out := cutImage(img, icon.FrameType, icon.FrameColor, r)
-
-	icon.img = out
+	icon.img = img
 	return nil
 }
 
@@ -48,7 +44,7 @@ func (icon *Icon) decodeImage() (*image.Image, error) {
 		return nil, err
 	}
 
-	smallImg := resizeSquare(originImg, icon.rectWidth)
+	smallImg := resizeSquare(originImg, IMG_SIZE)
 	return &smallImg, nil
 }
 
@@ -144,8 +140,8 @@ func drawDiamondBounds(img *image.RGBA, frameType int, col color.Color, r int) {
 			img.Set(2*r-i-j, r-i, col)
 		}
 	}
-
 }
+
 func drawCircleBounds(img *image.RGBA, frameType int, col color.Color, r int) {
 	bold := r / 7
 	// TODO radianの刻みもIMAGE_SIZEによって変えるべき
