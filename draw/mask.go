@@ -93,7 +93,7 @@ func resizeSquare(img image.Image, width uint) image.Image {
 	// 土台となる無地のimage
 	out := image.NewRGBA(image.Rect(0, 0, len, len))
 	draw.Draw(out, out.Bounds(), img, point, draw.Src)
-	smallImg := resize.Thumbnail(width, width, out, resize.Lanczos3)
+	smallImg := resize.Thumbnail(width, width, out, resize.Bilinear)
 	return smallImg
 }
 
