@@ -8,6 +8,8 @@ import (
 	"time"
 )
 
+// 使わない
+
 type Boad struct {
 	points     [BOAD_SIZE][BOAD_SIZE]bool
 	titlePoint string

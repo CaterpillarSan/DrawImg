@@ -31,11 +31,11 @@ var MUSYOKU_TOUMEI = color.RGBA{0, 0, 0, 0}
 // $emo4-color: #cdf9ff
 // $emo5-color: #ffb3b3
 // https://coolors.co/dedede-f9c7db-c3ffd1-cdf9ff-ffb3b3
-var GRAY = color.RGBA{222, 123, 222, 150}       // #dedede
-var PINK = color.RGBA{249, 119, 219, 150}       // #f9c7db
-var LIME = color.RGBA{195, 255, 209, 150}       // #c3ffd1
-var LIGHT_CYAN = color.RGBA{205, 249, 255, 150} // #cdf9ff
-var LIGHT_PINK = color.RGBA{255, 179, 179, 150} // #ffb3b3
+var GRAY = color.RGBA{222, 123, 222, 255}       // #dedede
+var PINK = color.RGBA{249, 119, 219, 255}       // #f9c7db
+var LIME = color.RGBA{195, 255, 209, 255}       // #c3ffd1
+var LIGHT_CYAN = color.RGBA{205, 249, 255, 255} // #cdf9ff
+var LIGHT_PINK = color.RGBA{255, 179, 179, 255} // #ffb3b3
 
 var BAR_COLOR = []color.Color{
 	GRAY,
