@@ -6,15 +6,17 @@ import (
 	"image/draw"
 )
 
-func (t *Thumbnail) DrawColorBar(emos []int) {
+func (t *Thumbnail) DrawColorBar() {
 
-	colWidth := IMG_SIZE / len(emos)
+	colWidth := IMG_SIZE / len(t.EmoIdList)
 
 	img := image.NewRGBA(image.Rect(0, IMG_SIZE-COLBAR_HEIGHT, IMG_SIZE, IMG_SIZE))
 
-	for i := 0; i < IMG_SIZE; i++ {
-		for j := 0; j <= COLBAR_HEIGHT; j++ {
-			img.Set(i, IMG_SIZE-j, BAR_COLOR[i/colWidth])
+	for emo := 0; emo < len(t.EmoIdList); emo++ {
+		for i := colWidth * emo; i < colWidth*(emo+1); i++ {
+			for j := 0; j <= COLBAR_HEIGHT; j++ {
+				img.Set(i, IMG_SIZE-j, BAR_COLOR[t.EmoIdList[emo]-1])
+			}
 		}
 	}
 

@@ -8,13 +8,12 @@ import (
 )
 
 type Text struct {
-	Sentence  string
-	length    int
-	placement string
+	Sentence string
+	length   int
 }
 
-func NewText(sen string, boad Boad) *Text {
-	text := &Text{sen, len(sen), boad.titlePoint}
+func NewText(sen string) *Text {
+	text := &Text{sen, len(sen)}
 	return text
 }
 
@@ -39,7 +38,7 @@ func (t *Thumbnail) SetTitle() error {
 	rect := image.Rect(0, IMG_SIZE-WIDTH*3, IMG_SIZE, IMG_SIZE)
 
 	// サムネイル画像と合成
-	draw.Draw(t.Img, rect, textImg, image.Pt(0, 0), draw.Over)
+	draw.Draw(t.Img, rect, textImg, image.ZP, draw.Over)
 
 	return nil
 

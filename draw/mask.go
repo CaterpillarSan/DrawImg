@@ -1,86 +1,17 @@
 package draw
 
 import (
-	"bytes"
 	"image"
 	"image/color"
 	"image/draw"
-	"io/ioutil"
 	"math"
-	"net/http"
-	"net/url"
-	"os"
 
 	"github.com/nfnt/resize"
 )
 
-func (icon *Icon) NewPicture() error {
-	// イメージをimage.Imageに変換し, リサイズ
-	img, err := icon.decodeImage()
-	if err != nil {
-		return err
-	}
-
-	icon.img = img
-	return nil
-}
-
-func (icon *Icon) decodeImage() (*image.Image, error) {
-	u, err := url.Parse(icon.ImageUrl)
-	if err != nil {
-		return nil, err
-	}
-	var originImg image.Image
-
-	if u.Scheme == "https" && u.Host == "s3-ap-northeast-1.amazonaws.com" {
-		// Get image
-		originImg, err = getImageFromUrl(icon.ImageUrl)
-	} else {
-		// デバッグ用, ローカルのファイルを取り出す
-		originImg, err = getImageFromLocal(icon.ImageUrl)
-		// return nil, errors.New("Unauthorized URL") // TODO : エラーちゃんとする
-	}
-	if err != nil {
-		return nil, err
-	}
-
-	smallImg := resizeSquare(originImg, IMG_SIZE)
-	return &smallImg, nil
-}
-
-func getImageFromUrl(imgUrl string) (image.Image, error) {
-	resp, err := http.Get(imgUrl)
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-	data, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-	img, _, err := image.Decode(bytes.NewBuffer(data))
-	if err != nil {
-		return nil, err
-	}
-
-	return img, nil
-}
-
-func getImageFromLocal(imgUrl string) (image.Image, error) {
-	f, err := os.Open(imgUrl)
-	if err != nil {
-		return nil, err
-	}
-	defer f.Close()
-	originImg, _, err := image.Decode(f)
-	if err != nil {
-		return nil, err
-	}
-	return originImg, nil
-}
-
 // 画像を正方形に整形
-func resizeSquare(img image.Image, width uint) image.Image {
+// TODO 正方形とは限らなくなり
+func resizeSquare(img image.Image, width uint) *image.Image {
 	xx := img.Bounds().Dx()
 	yy := img.Bounds().Dy()
 	len := int(math.Min(float64(xx), float64(yy)))
@@ -94,7 +25,7 @@ func resizeSquare(img image.Image, width uint) image.Image {
 	out := image.NewRGBA(image.Rect(0, 0, len, len))
 	draw.Draw(out, out.Bounds(), img, point, draw.Src)
 	smallImg := resize.Thumbnail(width, width, out, resize.Bilinear)
-	return smallImg
+	return &smallImg
 }
 
 // 画像を切り取る
