@@ -28,6 +28,60 @@ func resizeSquare(img image.Image, width uint) *image.Image {
 	return &smallImg
 }
 
+func (t *Thumbnail) CutKakumaru(r int) {
+	// 土台となる無地のimage
+	in := t.Img.SubImage(t.Img.Rect)
+	out := image.NewRGBA(in.Bounds())
+	mask := &kakumaru{r, in.Bounds()}
+
+	draw.DrawMask(out, out.Bounds(), in, image.ZP, mask, image.ZP, draw.Over)
+	t.Img = out
+}
+
+type kakumaru struct {
+	r    int
+	rect image.Rectangle
+}
+
+func (k *kakumaru) ColorModel() color.Model {
+	return color.AlphaModel
+}
+
+func (k *kakumaru) Bounds() image.Rectangle {
+	return k.rect
+}
+
+func (k *kakumaru) At(x, y int) color.Color {
+	r := k.r
+	switch {
+	case x < r && y < r:
+		if calcRadius(x, y, r, r) > r*r {
+			return color.Alpha{0}
+		}
+	case x < r && y > (k.rect.Dy()-r):
+		if calcRadius(x, y, r, k.rect.Dy()-r) > r*r {
+			return color.Alpha{0}
+		}
+	case x > (k.rect.Dx()-r) && y < r:
+		if calcRadius(x, y, k.rect.Dx()-r, r) > r*r {
+			return color.Alpha{0}
+		}
+	case x > (k.rect.Dx()-r) && y > (k.rect.Dy()-r):
+		if calcRadius(x, y, k.rect.Dx()-r, k.rect.Dy()-r) > r*r {
+			return color.Alpha{0}
+		}
+	default:
+		return color.Alpha{255}
+	}
+
+	return color.Alpha{255}
+}
+
+func calcRadius(x, y, cx, cy int) int {
+	return (x-cx)*(x-cx) + (y-cy)*(y-cy)
+}
+
+// ************************ 以下, 不要になったメソッド **********************
 // 画像を切り取る
 func cutImage(in *image.Image, frameType int, col color.Color, r int) *image.RGBA {
 	// 土台となる無地のimage

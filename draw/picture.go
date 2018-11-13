@@ -37,7 +37,7 @@ func NewPicList(cards []model.Card) []*Picture {
 	// 画像
 	rnum := rand.Intn(len(cards))
 	pic.ImageUrl = cards[rnum].ImageUrl.String
-	pic.FrameColor = BAR_COLOR[cards[rnum].EmoID]
+	// pic.FrameColor = BAR_COLOR[cards[rnum].EmoID-1]
 	cards = append(cards[:rnum], cards[rnum+1:]...)
 
 	pictures = append(pictures, pic)

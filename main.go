@@ -20,12 +20,12 @@ func main() {
 		// model.Card{ImageUrl: null.NewString("./pictures/5.png", true), EmoID: 1},
 		// model.Card{ImageUrl: null.NewString("./pictures/6.png", true), EmoID: 2},
 		// model.Card{ImageUrl: null.NewString("./pictures/7.png", true), EmoID: 3},
-		model.Card{ImageUrl: null.NewString("./pictures/8.png", true), EmoID: 4},
-		model.Card{ImageUrl: null.NewString("./pictures/9.png", true), EmoID: 5},
+		// model.Card{ImageUrl: null.NewString("./pictures/8.png", true), EmoID: 4},
+		// model.Card{ImageUrl: null.NewString("./pictures/9.png", true), EmoID: 5},
 		model.Card{ImageUrl: null.NewString("./pictures/10.jpg", true), EmoID: 1},
 		model.Card{ImageUrl: null.NewString("./pictures/11.png", true), EmoID: 2},
 		model.Card{ImageUrl: null.NewString("./pictures/12.jpeg", true), EmoID: 2},
-		model.Card{ImageUrl: null.NewString("./pictures/emo.jpg", true), EmoID: 3},
+		// model.Card{ImageUrl: null.NewString("./pictures/emo.jpg", true), EmoID: 3},
 	}
 
 	title := "We are Yakudo"
@@ -45,6 +45,8 @@ func main() {
 	}
 
 	t.DrawColorBar()
+
+	t.CutKakumaru(70)
 	// 出力用ファイル作成(エラー処理は略)
 	file, _ := os.Create("sample.png")
 	defer file.Close()

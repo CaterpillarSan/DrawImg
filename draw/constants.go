@@ -2,22 +2,20 @@ package draw
 
 import "image/color"
 
+// 生成サムネイルの縦横サイズ
 const IMG_SIZE = 512
 
-const OUT_OF_BOAD = 4 // = num of type
-const ACTIVE_FIEAD = 11
-const BOAD_SIZE = OUT_OF_BOAD*2 + ACTIVE_FIEAD
+// タイトル欄の高さ
+const TITLE_HEIGHT = IMG_SIZE / 8
 
-const WIDTH = IMG_SIZE / ACTIVE_FIEAD
+// カラーバーの高さ
 const COLBAR_HEIGHT = IMG_SIZE / 25
 
-const (
-	DIAMOND = 0
-	CIRCLE  = 1
-)
+// 角丸めるときの半径
+const KAKUMAR_RADIUS = 70
 
+// タイトルのフォント
 const FONT_PATH = "./metadata/fonts/07LogoTypeGothic-Condense.ttf"
-const BACKGROUND_PATH = "./metadata/backgrounds/"
 
 // ****************************** //
 // 色シリーズ
@@ -37,6 +35,7 @@ var LIME = color.RGBA{195, 255, 209, 255}       // #c3ffd1
 var LIGHT_CYAN = color.RGBA{205, 249, 255, 255} // #cdf9ff
 var LIGHT_PINK = color.RGBA{255, 179, 179, 255} // #ffb3b3
 
+// カラーバー用. emoIDと対応
 var BAR_COLOR = []color.Color{
 	GRAY,
 	PINK,
@@ -45,9 +44,29 @@ var BAR_COLOR = []color.Color{
 	LIGHT_PINK,
 }
 
+// タイトルバー周りの色
 var TITLE_BACKGROUND = color.RGBA{0, 0, 0, 100}
 var TITLE_CHAR = color.RGBA{255, 255, 255, 255}
 
+// ****************************** //
+
+// ******************************************************************* //
+// これ以降使ってない. 過去の遺産
+
+// クッキー焼く用
+const OUT_OF_BOAD = 4                          // = num of type
+const ACTIVE_FIEAD = 11                        // iconを置けるフィールドの幅
+const BOAD_SIZE = OUT_OF_BOAD*2 + ACTIVE_FIEAD // ボード全体のサイズ
+const WIDTH = IMG_SIZE / ACTIVE_FIEAD          // ボード1メモリあたりのピクセル数
+const (                                        // アイコンの形ナンバリング
+	DIAMOND = 0
+	CIRCLE  = 1
+)
+
+// 背景画像置き場のパス
+const BACKGROUND_PATH = "./metadata/backgrounds/"
+
+// 背景色に沿ったemoカラー
 // blue
 // https://coolors.co/2f0601-554a41-26c485-a3e7fc-32908f
 var BLACK_BEAN = color.RGBA{47, 6, 1, 255}               //#2F0601
