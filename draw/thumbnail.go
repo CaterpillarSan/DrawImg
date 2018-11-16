@@ -8,7 +8,7 @@ import (
 
 type Thumbnail struct {
 	Img       *image.RGBA
-	Icons     []*Picture
+	Pics      []*Picture
 	Title     *Text
 	BKColor   string
 	EmoIdList []int
@@ -24,7 +24,7 @@ func NewThumbnail(title string, cards []model.Card) *Thumbnail {
 	t.EmoIdList = getEmoIdList(cards)
 
 	// アイコン画像一覧
-	t.Icons = NewPicList(cards)
+	t.Pics = NewPicList(cards)
 
 	// タイトル
 	t.Title = NewText(title)

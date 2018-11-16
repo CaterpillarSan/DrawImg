@@ -5,6 +5,10 @@ import "image/color"
 // 生成サムネイルの縦横サイズ
 const IMG_SIZE = 512
 
+// 画像が複数ある場合の, 1枚目の画像比率
+const LEFT_PIC_WIDTH = int(512 * 0.625)
+const RIGHT_PIC_WIDTH = int(512 * 0.375)
+
 // タイトル欄の高さ
 const TITLE_HEIGHT = IMG_SIZE / 8
 
@@ -12,7 +16,7 @@ const TITLE_HEIGHT = IMG_SIZE / 8
 const COLBAR_HEIGHT = IMG_SIZE / 25
 
 // 角丸めるときの半径
-const KAKUMAR_RADIUS = 70
+const KAKUMARU_RADIUS = 70
 
 // タイトルのフォント
 const FONT_PATH = "./metadata/fonts/07LogoTypeGothic-Condense.ttf"

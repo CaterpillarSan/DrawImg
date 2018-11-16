@@ -2,6 +2,7 @@ package draw
 
 import (
 	"bytes"
+	"errors"
 	"image"
 	"image/color"
 	"image/draw"
@@ -27,27 +28,34 @@ type Picture struct {
 // cardsから, サムネに使用する写真データをランダムに抜き出す
 func NewPicList(cards []model.Card) []*Picture {
 
+	if len(cards) == 0 {
+		return []*Picture{}
+	}
+
 	var pictures []*Picture
 
 	rand.Seed(time.Now().UnixNano())
 
-	// for i := 0; i < 4; i++ {
-	pic := &Picture{}
+	// 画像を4枚まで選出
+	for i := 0; i < 4; i++ {
+		pic := &Picture{}
 
-	// 画像
-	rnum := rand.Intn(len(cards))
-	pic.ImageUrl = cards[rnum].ImageUrl.String
-	// pic.FrameColor = BAR_COLOR[cards[rnum].EmoID-1]
-	cards = append(cards[:rnum], cards[rnum+1:]...)
+		// 画像
+		rnum := rand.Intn(len(cards))
+		pic.ImageUrl = cards[rnum].ImageUrl.String
+		cards = append(cards[:rnum], cards[rnum+1:]...)
 
-	pictures = append(pictures, pic)
-	// }
+		pictures = append(pictures, pic)
+		if len(cards) == 0 {
+			break
+		}
+	}
 
 	return pictures
 }
 
 // pic型の情報をもとに, image型を作成
-func (pic *Picture) ToPicture() error {
+func (pic *Picture) ToPicture(rect image.Rectangle) error {
 	// イメージを取り込み,image.Imageに変換
 	img, err := pic.decodeImage()
 	if err != nil {
@@ -55,7 +63,7 @@ func (pic *Picture) ToPicture() error {
 	}
 
 	// いい感じにリサイズ
-	pic.img = resizeSquare(*img, IMG_SIZE)
+	pic.img = resizeSquare(*img, rect)
 	return nil
 }
 
@@ -114,14 +122,19 @@ func getImageFromLocal(imgUrl string) (image.Image, error) {
 
 // 写真の描画
 func (t *Thumbnail) DrawPictures() error {
-	if t.Icons == nil {
+	if t.Pics == nil {
 		return nil
 	}
 
-	// TODO 設置場所を決める, どこで決めるべきか...
+	picNum := len(t.Pics)
+	if picNum == 0 {
+		// picが一枚もなかった
+		return nil
+	}
+
 	// Iconの枚数によってIcon.rectが決まる
-	for _, icon := range t.Icons {
-		if err := icon.drawPicImage(t.Img); err != nil {
+	for i, icon := range t.Pics {
+		if err := icon.drawPicImage(t.Img, picNum, i); err != nil {
 			return err
 		}
 
@@ -129,13 +142,32 @@ func (t *Thumbnail) DrawPictures() error {
 	return nil
 }
 
-func (pic *Picture) drawPicImage(distImg *image.RGBA) error {
+func (pic *Picture) drawPicImage(distImg *image.RGBA, picNum int, picID int) error {
+	var rect image.Rectangle
+	if picID == 0 {
+		// 1枚目 IMG_SIZE * IMG_SIZE か IMG_SIZE * 0.625
+		if picNum == 1 {
+			// 画像が全部で1枚
+			rect = image.Rect(0, 0, IMG_SIZE, IMG_SIZE)
+		} else {
+			// 画像が複数枚ある時の, 最初の一枚
+			rect = image.Rect(0, 0, LEFT_PIC_WIDTH, IMG_SIZE)
+		}
+	} else {
+		if picNum == 1 {
+			// 0割を避けるエラー処理
+			return errors.New("pictureの数が合わない")
+		}
+		// 2枚目以降
+		width := IMG_SIZE / (picNum - 1)
+		rect = image.Rect(LEFT_PIC_WIDTH, (picID-1)*width, IMG_SIZE, picID*width)
+	}
 
 	// アイコン画像生成
-	if err := pic.ToPicture(); err != nil {
+	if err := pic.ToPicture(rect); err != nil {
 		return err
 	}
-	draw.Draw(distImg, distImg.Rect, *pic.img, image.ZP, draw.Src)
+	draw.Draw(distImg, rect, *pic.img, image.ZP, draw.Src)
 
 	return nil
 }

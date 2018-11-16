@@ -6,12 +6,12 @@ import (
 	"image/draw"
 	"math"
 
-	"github.com/nfnt/resize"
+	"github.com/disintegration/imaging"
 )
 
 // 画像を正方形に整形
 // TODO 正方形とは限らなくなり
-func resizeSquare(img image.Image, width uint) *image.Image {
+func resizeSquare(img image.Image, rect image.Rectangle) *image.Image {
 	xx := img.Bounds().Dx()
 	yy := img.Bounds().Dy()
 	len := int(math.Min(float64(xx), float64(yy)))
@@ -24,15 +24,18 @@ func resizeSquare(img image.Image, width uint) *image.Image {
 	// 土台となる無地のimage
 	out := image.NewRGBA(image.Rect(0, 0, len, len))
 	draw.Draw(out, out.Bounds(), img, point, draw.Src)
-	smallImg := resize.Thumbnail(width, width, out, resize.Bilinear)
+
+	sl := imaging.Thumbnail(img, rect.Dx(), rect.Dy(), imaging.Lanczos)
+	smallImg := image.Image(sl) //TODO: なぜか一旦代入するとうまくいく
+
 	return &smallImg
 }
 
-func (t *Thumbnail) CutKakumaru(r int) {
+func (t *Thumbnail) CutKakumaru() {
 	// 土台となる無地のimage
 	in := t.Img.SubImage(t.Img.Rect)
 	out := image.NewRGBA(in.Bounds())
-	mask := &kakumaru{r, in.Bounds()}
+	mask := &kakumaru{KAKUMARU_RADIUS, in.Bounds()}
 
 	draw.DrawMask(out, out.Bounds(), in, image.ZP, mask, image.ZP, draw.Over)
 	t.Img = out
@@ -219,4 +222,4 @@ func (d *diamond) At(x, y int) color.Color {
 	return color.Alpha{0}
 }
 
-// *************************************************************** //
+// *************************************************************** /// *************************************************************** //

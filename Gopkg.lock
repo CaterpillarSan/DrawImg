@@ -10,54 +10,12 @@
   version = "1.0.0"
 
 [[projects]]
-  branch = "master"
-  digest = "1:2ced4d0d9e19326ffecaa5280a6a92a4d16f452497664d7e6bef514b3bb47687"
-  name = "github.com/VG-Tech-Dojo/treasure2018-group-f"
-  packages = ["model"]
+  digest = "1:2694597a20d303502ad1b7f1cc688977c7dc34da732ccf4d27e98b552cceed5b"
+  name = "github.com/disintegration/imaging"
+  packages = ["."]
   pruneopts = "UT"
-  revision = "c3f1a0b704edfc3eca8de03b4bd4ee4f1dd464fb"
-
-[[projects]]
-  digest = "1:af6a588c8f36d7b8d2050a4471d735bddb65b44e18e0f7bb048d26280898555d"
-  name = "github.com/aws/aws-sdk-go"
-  packages = [
-    "aws",
-    "aws/awserr",
-    "aws/awsutil",
-    "aws/client",
-    "aws/client/metadata",
-    "aws/corehandlers",
-    "aws/credentials",
-    "aws/credentials/ec2rolecreds",
-    "aws/credentials/endpointcreds",
-    "aws/credentials/stscreds",
-    "aws/csm",
-    "aws/defaults",
-    "aws/ec2metadata",
-    "aws/endpoints",
-    "aws/request",
-    "aws/session",
-    "aws/signer/v4",
-    "internal/ini",
-    "internal/s3err",
-    "internal/sdkio",
-    "internal/sdkrand",
-    "internal/sdkuri",
-    "internal/shareddefaults",
-    "private/protocol",
-    "private/protocol/eventstream",
-    "private/protocol/eventstream/eventstreamapi",
-    "private/protocol/query",
-    "private/protocol/query/queryutil",
-    "private/protocol/rest",
-    "private/protocol/restxml",
-    "private/protocol/xml/xmlutil",
-    "service/s3",
-    "service/sts",
-  ]
-  pruneopts = "UT"
-  revision = "34ab03ee1a2b90b3baf97ff666397c8fb9b8714b"
-  version = "v1.15.64"
+  revision = "0bd5694c78c9c3d9a3cd06a706a8f3c59296a9ac"
+  version = "v1.5.0"
 
 [[projects]]
   branch = "master"
@@ -72,51 +30,17 @@
   revision = "e2365dfdc4a05e4b8299a783240d4a7d5a65d4e4"
 
 [[projects]]
-  digest = "1:e22af8c7518e1eab6f2eab2b7d7558927f816262586cd6ed9f349c97a6c285c4"
-  name = "github.com/jmespath/go-jmespath"
-  packages = ["."]
-  pruneopts = "UT"
-  revision = "0b12d6b5"
-
-[[projects]]
   branch = "master"
-  digest = "1:d8715388cdd077d4b5e477e92e93e8c2c16c5f8cdc1f79b0ef2616ef8ea09f9f"
-  name = "github.com/jmoiron/sqlx"
-  packages = [
-    ".",
-    "reflectx",
-  ]
-  pruneopts = "UT"
-  revision = "82935fac6c1a317907c8f43ed3f7f85ea844a78b"
-
-[[projects]]
-  branch = "master"
-  digest = "1:34534b73e925d20cc72cf202f8b482fdcbe3a1b113e19375f31aadabd0f0f97d"
-  name = "github.com/nfnt/resize"
-  packages = ["."]
-  pruneopts = "UT"
-  revision = "83c6a9932646f83e3267f353373d47347b6036b2"
-
-[[projects]]
-  branch = "master"
-  digest = "1:1ecf2a49df33be51e757d0033d5d51d5f784f35f68e5a38f797b2d3f03357d71"
-  name = "golang.org/x/crypto"
-  packages = [
-    "bcrypt",
-    "blowfish",
-  ]
-  pruneopts = "UT"
-  revision = "e84da0312774c21d64ee2317962ef669b27ffb41"
-
-[[projects]]
-  branch = "master"
-  digest = "1:09c175055d303dadf3f82513c66e6da0b95ba22bc8e5d267a2674d16d95ea77a"
+  digest = "1:a6e3312f26e34d95bb7d371ba41ffa365a50688a7b8d5a60a76388423ac3e3c6"
   name = "golang.org/x/image"
   packages = [
+    "bmp",
     "font",
     "font/basicfont",
     "font/plan9font",
     "math/fixed",
+    "tiff",
+    "tiff/lzw",
   ]
   pruneopts = "UT"
   revision = "991ec62608f3c0da01d400756917825d1e2fd528"
@@ -134,8 +58,7 @@
   analyzer-version = 1
   input-imports = [
     "github.com/Iwark/text2img",
-    "github.com/VG-Tech-Dojo/treasure2018-group-f/model",
-    "github.com/nfnt/resize",
+    "github.com/disintegration/imaging",
     "gopkg.in/guregu/null.v3",
   ]
   solver-name = "gps-cdcl"
